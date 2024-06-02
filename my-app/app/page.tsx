@@ -1,16 +1,35 @@
-import Image from "next/image";
+"use client";
+
 import type { Todo } from "@/types.js";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 
 export default function Home() {
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    async function fetchToDos() {
+      const response = await axios.get("/api/todo");
+      //console.log(response);
+      setTodos(response.data as Todo[])
+    }
+
+    fetchToDos();
+  }, []);
+
+  console.log(todos);
+
   return (
     <div className="flex flex-col w-full justify-center items-center min-h-screen">
       List Page
       <div className="flex flex-col w-10/12 bg-gray-900 p-4 rounded-md shadow-2xl my-4">
-      <div className="w-full flex justify-between px-4 opacity-50 mb-2 text-slate-100">
-          <div>Title</div>
-          <div>Category</div>
-          <div>Status</div>
-        </div>
+          <div className="w-full flex justify-between px-4 opacity-50 mb-2 text-slate-100">
+            <div>Title</div>
+            <div>Category</div>
+            <div>Status</div>
+          </div>
           {todos.map((todo, idx) => (
             <>
             <div className={`${
